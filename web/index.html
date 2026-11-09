@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Session Monitor — Tactical Telemetry</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3.5' fill='%2313171F' stroke='%23283142'/%3E%3Ccircle cx='5' cy='5' r='2' fill='%2334D399'/%3E%3Ccircle cx='11' cy='5' r='2' fill='%2338BDF8'/%3E%3Ccircle cx='8' cy='11' r='2' fill='%23F87171'/%3E%3Cpath d='M5 7 C5 9, 8 9, 8 9 M11 7 C11 9, 8 9, 8 9' stroke='%23475569' stroke-width='1' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header id="top" class="top-bar" role="banner">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="4.5" cy="4.5" r="2" fill="var(--busy)" />
+        <circle cx="11.5" cy="4.5" r="2" fill="var(--accent)" />
+        <circle cx="8" cy="11.5" r="2" fill="var(--waiting)" />
+        <path d="M4.5 6.5C4.5 8.5 8 8.5 8 9.5M11.5 6.5C11.5 8.5 8 8.5 8 9.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <h1>Session Monitor</h1>
+  </div>
+
+  <div id="counts" class="counts" role="toolbar" aria-label="Bộ lọc trạng thái phiên"></div>
+  <div id="providers" class="providers" role="toolbar" aria-label="Bộ lọc công cụ Agent"></div>
+
+  <div class="search-box">
+    <svg class="search-icon" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.8" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.6 10.6L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input id="search-input" type="search" placeholder="Tìm phiên, thư mục, công cụ… (/)" aria-label="Tìm kiếm phiên hoặc công cụ" autocomplete="off" spellcheck="false">
+    <button id="search-clear" class="search-clear hidden" type="button" title="Xóa tìm kiếm (Esc)" aria-label="Xóa tìm kiếm">×</button>
+  </div>
+
+  <div id="limits" class="limits" aria-label="Hạn mức sử dụng"></div>
+
+  <div class="top-actions">
+    <div class="view-mode-switch" role="group" aria-label="Chế độ hiển thị 2D hoặc 3D Phòng ban">
+      <button id="view-2d" class="btn-ghost" type="button" title="Chế độ sơ đồ 2D phẳng (Phím tắt: V)">🗺 2D</button>
+      <button id="view-3d" class="btn-ghost" type="button" title="Chế độ không gian 3D Phòng ban (Phím tắt: V)">🏢 3D Phòng ban</button>
+    </div>
+    <div class="fleet-controls" role="group" aria-label="Điều khiển nhóm Fleet">
+      <button id="expand-all" class="btn-ghost" type="button" title="Mở rộng tất cả các nhóm Fleet">Mở hết</button>
+      <button id="collapse-all" class="btn-ghost" type="button" title="Thu gọn tất cả các nhóm Fleet">Thu gọn</button>
+    </div>
+    <button id="alert-toggle" class="btn-secondary" type="button" title="Bật/tắt âm báo và thông báo khi có phiên chuyển sang Đang chờ">
+      <span id="alert-icon" aria-hidden="true">🔕</span>
+      <span id="alert-label">Cảnh báo</span>
+    </button>
+    <button id="health-refresh" class="btn-secondary" type="button" title="Chạy lại kiểm tra trạng thái kết nối các máy chủ MCP">
+      <svg class="icon-spin" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2.5v3h-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Kiểm tra MCP</span>
+    </button>
+    <div id="updated" class="updated" role="status" aria-live="polite">
+      <span class="conn-dot" aria-hidden="true"></span>
+      <span class="conn-text">Đang kết nối…</span>
+    </div>
+  </div>
+</header>
+
+<div id="workspace" class="workspace">
+  <main id="fleets" class="canvas" aria-label="Sơ đồ các nhóm phiên Claude"></main>
+  <div id="office3d" class="office3d-stage hidden" aria-label="Không gian 3D Phòng ban"></div>
+
+  <div id="splitter" class="splitter hidden" role="separator" aria-orientation="vertical" aria-label="Kéo để thay đổi độ rộng bảng chi tiết" tabindex="0"></div>
+
+  <aside id="panel" class="inspector hidden" aria-label="Chi tiết phiên làm việc">
+    <div id="panel-header" class="inspector-header"></div>
+    <div id="panel-tabs" class="inspector-tabs" role="tablist"></div>
+    <div id="panel-body" class="inspector-body"></div>
+  </aside>
+</div>
+
+<script src="/static/vendor/three.min.js"></script>
+<script src="/static/office3d.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
