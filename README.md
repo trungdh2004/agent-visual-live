@@ -57,3 +57,4 @@ than raising.
 - The rate-limit endpoint rate-limits its own callers. On a 429 the last good
   reading is shown, cached in `~/.cache/claude-session-monitor/usage.json`.
 # agent-visual-live
+# agent-visual-live
